@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pet Them All – prototipo</title>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #hud { position: fixed; top: 12px; left: 12px; color: #fff; font: 14px/1.5 sans-serif; }
+      #contatore { font-size: 20px; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./node_modules/three/build/three.module.js",
+          "three/addons/": "./node_modules/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="hud">
+      <div id="contatore"></div>
+      <div>WASD o frecce: muoviti · Ctrl o Shift: accovacciati · E da accovacciata: pspsps</div>
+      <div>Gatti: grigio fermo · giallo in arrivo · rosso in fuga · verde accarezzato</div>
+    </div>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
