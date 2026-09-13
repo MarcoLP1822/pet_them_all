@@ -1,0 +1,19 @@
+---
+layout: default
+---
+{%- include lingua.html -%}
+<div class="home">
+  <h2 class="post-list-heading"><span lang="it">Post</span> <span lang="en">Posts</span></h2>
+  <ul class="post-list">
+    {%- for post in site.posts -%}
+    <li>
+      <span class="post-meta">{{ post.date | date: site.minima.date_format }}</span>
+      <h3>
+        <a class="post-link" href="{{ post.url | relative_url }}"><span lang="it">{{ post.title | escape }}</span> <span lang="en">{{ post.title_en | default: post.title | escape }}</span></a>
+      </h3>
+    </li>
+    {%- endfor -%}
+  </ul>
+
+  <p class="rss-subscribe"><span lang="it">iscriviti</span> <span lang="en">subscribe</span> <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+</div>

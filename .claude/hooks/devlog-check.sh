@@ -15,5 +15,5 @@ if ! git log --since="$TODAY 00:00" --oneline | grep -q .; then
   exit 0
 fi
 
-echo "C'e' lavoro committato oggi ma nessun post nel devlog. Se e' un checkpoint reale, scrivi docs/_posts/${TODAY}-titolo-breve.md (frontmatter Jekyll) basandoti su 'git log --since=\"$TODAY 00:00\" --oneline', poi fai commit del post e push su master per pubblicarlo. Se non vale la pena documentarlo, dimmelo e fermati comunque." >&2
+echo "C'e' lavoro committato oggi ma nessun post nel devlog. Se e' un checkpoint reale, scrivi docs/_posts/${TODAY}-titolo-breve.md in italiano e inglese, con la stessa struttura dei post gia' presenti, basandoti su 'git log --since=\"$TODAY 00:00\" --oneline', poi fai commit del post e push su master per pubblicarlo. Se non vale la pena documentarlo, dimmelo e fermati comunque." >&2
 exit 2
