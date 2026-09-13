@@ -1,0 +1,25 @@
+<style>
+  html[data-lingua="it"] [lang="en"],
+  html[data-lingua="en"] [lang="it"] { display: none; }
+  .cambia-lingua { float: right; margin: 0 0 1em 1em; }
+</style>
+<button type="button" class="cambia-lingua"></button>
+<script>
+  // Ogni testo esiste in italiano e in inglese: il pulsante nasconde l'altra lingua e ricorda la scelta.
+  (function () {
+    var button = document.currentScript.previousElementSibling;
+    function show(lingua) {
+      document.documentElement.lang = document.documentElement.dataset.lingua = lingua;
+      button.lang = lingua === 'it' ? 'en' : 'it';
+      button.textContent = lingua === 'it' ? 'English' : 'Italiano';
+    }
+    var saved;
+    try { saved = localStorage.getItem('lingua'); } catch (e) {}
+    show(saved === 'en' ? 'en' : 'it');
+    button.addEventListener('click', function () {
+      var lingua = document.documentElement.dataset.lingua === 'it' ? 'en' : 'it';
+      try { localStorage.setItem('lingua', lingua); } catch (e) {}
+      show(lingua);
+    });
+  })();
+</script>
