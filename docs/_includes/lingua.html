@@ -1,6 +1,7 @@
 <style>
-  html[data-lingua="it"] [lang="en"],
-  html[data-lingua="en"] [lang="it"] { display: none; }
+  /* il pulsante è scritto nell'altra lingua, quindi non va nascosto */
+  html[data-lingua="it"] [lang="en"]:not(.cambia-lingua),
+  html[data-lingua="en"] [lang="it"]:not(.cambia-lingua) { display: none; }
   .cambia-lingua { float: right; margin: 0 0 1em 1em; }
 </style>
 <button type="button" class="cambia-lingua"></button>
