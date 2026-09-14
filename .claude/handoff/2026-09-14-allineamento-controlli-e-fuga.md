@@ -8,6 +8,7 @@ Sessione locale arrivata dopo una sessione in cloud. Cosa è successo, in ordine
 2. I controlli sono stati corretti: ci si accovaccia solo con Shift, e i tasti rimasti bloccati da Cmd vengono liberati.
 3. La direzione di fuga dei gatti è diventata imprevedibile.
 4. È stato fatto un debug completo del gioco, durante il quale è emerso che il server di sviluppo serviva file vecchi dalla cache; il server è stato sistemato.
+5. Il devlog ora mostra data e ora e ordina i post in base all'ora di pubblicazione.
 
 Da questa sessione in poi l'handoff si committa, così lo leggono anche le sessioni in cloud.
 
@@ -25,7 +26,8 @@ Tutto è su `master` di [MarcoLP1822/pet_them_all](https://github.com/MarcoLP182
 | 4 | Fuga in una direzione a caso, fuori da uno spicchio di 30° centrato sulla bambina | commit `c678a42`, PR #8 |
 | 5 | Debug completo: 300 partite simulate senza violazioni, suite stabile su 30 esecuzioni | nessun file nella repo (vedi Gotcha) |
 | 6 | Server di sviluppo senza cache (`serve.py`) | commit `9c4895d`, PR #8 |
-| 7 | Post del devlog su fuga e controlli, handoff committati | PR #8 |
+| 7 | Post del devlog su fuga e controlli, handoff committati | PR #8, merge `64930ec` |
+| 8 | Devlog con data e ora, post in ordine di pubblicazione | PR #9 |
 
 ## Architettura
 
@@ -94,8 +96,10 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 ### Devlog
 
 - GitHub Pages con la build classica (Jekyll 3.10, minima 2.5.1) da `master` `/docs`: https://marcolp1822.github.io/pet_them_all/
-- Ogni post ha `title` e `title_en` nel front matter e il testo in blocchi `<div lang="it" markdown="1">` e `<div lang="en" markdown="1">`. Il pulsante lingua è in `docs/_includes/lingua.html` e ricorda la scelta in `localStorage`, alla chiave `lingua`.
-- Stop hook: se oggi ci sono commit e manca `docs/_posts/<oggi>-*.md`, blocca Claude e chiede un post in italiano e inglese, poi commit e push su `master`.
+- Ogni post ha nel front matter `title`, `title_en` e `date` con l'ora e il fuso, per esempio `date: 2026-09-14 15:18:16 +0200`. Il testo sta in blocchi `<div lang="it" markdown="1">` e `<div lang="en" markdown="1">`.
+- La `date` decide l'ordine dei post e compare nella home e in cima a ogni post nel formato `gg/mm/aaaa hh:mm`, con il fuso `Europe/Rome` impostato in `docs/_config.yml`. Senza l'ora, Jekyll ordina i post dello stesso giorno per nome del file. Come ora si usa quella del commit che ha creato il post.
+- Il pulsante lingua è in `docs/_includes/lingua.html` e ricorda la scelta in `localStorage`, alla chiave `lingua`.
+- Stop hook: se oggi ci sono commit e manca `docs/_posts/<oggi>-*.md`, blocca Claude e chiede un post in italiano e inglese, con data e ora nel front matter, poi commit e push su `master`.
 
 ### Flusso di lavoro
 
@@ -113,6 +117,7 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - **Un solo `random` iniettabile** per tratti e fuga, così i test restano ripetibili.
 - **`serve.py` al posto di `python3 -m http.server`.** Durante il debug il browser integrato ha eseguito un `tasti.js` vecchio preso dalla cache anche dopo aver ricaricato la pagina.
 - **L'handoff si committa**, perché le sessioni in cloud non possono leggere file che non sono nella repo.
+- **Data e ora nei post del devlog**, richieste dall'utente. I due post del 14 settembre comparivano nell'ordine sbagliato perché Jekyll li ordinava per nome del file.
 - Le decisioni del 13 settembre (niente bundler, logica separata dal rendering, livello deciso in Blender, devlog in `docs/`) restano valide.
 
 ## Gotcha
@@ -128,6 +133,7 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - **zsh.** Interrompe il comando se un glob non trova file.
 - **Cache di GitHub Pages.** Tiene i file per qualche minuto: per vedere subito le modifiche aggiungi `?v=...` all'URL.
 - **Stop hook.** Scatta a ogni risposta nei giorni con commit ma senza post, compreso dopo mezzanotte.
+- **Ora di un post dal commit.** Per trovarla: `TZ=Europe/Rome git log --diff-filter=A --date=format-local:'%Y-%m-%d %H:%M:%S %z' --format=%ad -- docs/_posts/<file>`.
 
 ## Problemi aperti e prossimi passi
 

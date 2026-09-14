@@ -2,6 +2,7 @@
 layout: post
 title: "Gatti imprevedibili e controlli più affidabili"
 title_en: "Unpredictable cats and sturdier controls"
+date: 2026-09-14 15:18:16 +0200
 ---
 
 <div lang="it" markdown="1">
