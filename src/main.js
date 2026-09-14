@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createGame, update, pspsps, counterText, PARAMS } from './gatti.js';
+import { taccuinoTesto } from './taccuino.js';
 
 const STATE_COLORS = { fermo: 0x9e9e9e, in_arrivo: 0xffc107, in_fuga: 0xf44336, accarezzato: 0x4caf50 };
 const GAME_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyE', 'ControlLeft', 'ControlRight'];
@@ -63,6 +64,7 @@ addEventListener('keyup', (event) => keys.delete(event.code));
 addEventListener('blur', () => keys.clear());
 
 const hud = document.getElementById('contatore');
+const taccuinoHud = document.getElementById('taccuino');
 let last = performance.now();
 renderer.setAnimationLoop((now) => {
   const dt = Math.min((now - last) / 1000, 0.1);
@@ -80,5 +82,8 @@ renderer.setAnimationLoop((now) => {
     catMeshes[i].material = catMaterials[cat.state];
   });
   hud.textContent = counterText(game);
+  // Il taccuino cambia solo quando si sblocca un tratto: riscriviamo il pannello soltanto allora.
+  const taccuino = taccuinoTesto(game);
+  if (taccuino !== taccuinoHud.textContent) taccuinoHud.textContent = taccuino;
   renderer.render(scene, camera);
 });

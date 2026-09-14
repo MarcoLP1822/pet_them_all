@@ -1,6 +1,8 @@
 // Meccanica core: la bambina chiama i gatti (pspsps) e li accarezza.
 // Solo logica, niente three.js: i test girano con `npm test`.
 
+import { nuovaScheda, scopriTratto } from './taccuino.js';
+
 export const FERMO = 'fermo';
 export const IN_ARRIVO = 'in_arrivo';
 export const IN_FUGA = 'in_fuga';
@@ -21,12 +23,20 @@ export const PARAMS = {
   petDistance: 1,
 };
 
-export function createGame({ cats, girl = [0, 0], params = PARAMS }) {
+// random è iniettabile: i test scelgono il tratto delle coccole invece di subirlo.
+export function createGame({ cats, girl = [0, 0], params = PARAMS, random = Math.random }) {
   return {
     params,
+    random,
     girl: { x: girl[0], z: girl[1], vx: 0, vz: 0, crouched: false },
-    cats: cats.map(([x, z]) => ({ x, z, state: FERMO, fleeTime: 0, fleeX: 0, fleeZ: 0 })),
+    cats: cats.map(([x, z], i) => ({ x, z, state: FERMO, fleeTime: 0, fleeX: 0, fleeZ: 0, ...nuovaScheda(i + 1) })),
   };
+}
+
+// Ogni cambio di stato passa da qui: è il punto in cui il taccuino registra i tratti.
+function entra(game, cat, state) {
+  cat.state = state;
+  scopriTratto(cat, state, game.random);
 }
 
 // E da accovacciata: il gatto fermo più vicino entro il raggio di richiamo arriva.
@@ -42,7 +52,7 @@ export function pspsps(game) {
       nearest = d;
     }
   }
-  if (called) called.state = IN_ARRIVO;
+  if (called) entra(game, called, IN_ARRIVO);
   return called;
 }
 
@@ -63,7 +73,7 @@ export function update(game, input, dt) {
       cat.x = clamp(cat.x + cat.fleeX * p.fleeSpeed * dt, p.areaHalfSize);
       cat.z = clamp(cat.z + cat.fleeZ * p.fleeSpeed * dt, p.areaHalfSize);
       cat.fleeTime -= dt;
-      if (cat.fleeTime <= 0) cat.state = FERMO;
+      if (cat.fleeTime <= 0) entra(game, cat, FERMO);
     }
 
     const dx = cat.x - girl.x;
@@ -75,7 +85,8 @@ export function update(game, input, dt) {
       const approachSpeed = (girl.vx * dx + girl.vz * dz) / dist; // quanto in fretta la bambina gli va incontro
       if (approachSpeed > p.fleeSpeedThreshold) {
         // ponytail: scappa in linea retta, lontano da dove era la bambina quando si è spaventato
-        Object.assign(cat, { state: IN_FUGA, fleeTime: p.fleeDuration, fleeX: dx / dist, fleeZ: dz / dist });
+        Object.assign(cat, { fleeTime: p.fleeDuration, fleeX: dx / dist, fleeZ: dz / dist });
+        entra(game, cat, IN_FUGA);
       }
     } else if (cat.state === IN_ARRIVO && dist > 0) {
       const step = Math.min(p.catSpeed * dt, dist);
@@ -84,7 +95,7 @@ export function update(game, input, dt) {
     }
 
     if ((cat.state === FERMO || cat.state === IN_ARRIVO) && distance(cat, girl) < p.petDistance) {
-      cat.state = ACCAREZZATO;
+      entra(game, cat, ACCAREZZATO);
     }
   }
 }
