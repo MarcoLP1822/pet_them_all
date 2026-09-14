@@ -9,6 +9,7 @@ Sessione locale arrivata dopo una sessione in cloud. Cosa è successo, in ordine
 3. La direzione di fuga dei gatti è diventata imprevedibile.
 4. È stato fatto un debug completo del gioco, durante il quale è emerso che il server di sviluppo serviva file vecchi dalla cache; il server è stato sistemato.
 5. Il devlog ora mostra data e ora e ordina i post in base all'ora di pubblicazione.
+6. La documentazione è stata allineata allo stato attuale: c'è un `README.md`, e l'handoff del 13 settembre è segnato come storico.
 
 Da questa sessione in poi l'handoff si committa, così lo leggono anche le sessioni in cloud.
 
@@ -27,11 +28,13 @@ Tutto è su `master` di [MarcoLP1822/pet_them_all](https://github.com/MarcoLP182
 | 5 | Debug completo: 300 partite simulate senza violazioni, suite stabile su 30 esecuzioni | nessun file nella repo (vedi Gotcha) |
 | 6 | Server di sviluppo senza cache (`serve.py`) | commit `9c4895d`, PR #8 |
 | 7 | Post del devlog su fuga e controlli, handoff committati | PR #8, merge `64930ec` |
-| 8 | Devlog con data e ora, post in ordine di pubblicazione | PR #9 |
+| 8 | Devlog con data e ora, post in ordine di pubblicazione | PR #9, merge `47ce7fe` |
+| 9 | Documentazione allineata: `README.md` nuovo, handoff del 13 settembre segnato come storico | PR #10 |
 
 ## Architettura
 
 ```
+README.md                   panoramica: cos'è il gioco, controlli, avvio, struttura
 index.html                  pagina del gioco; importmap verso node_modules/three, nessun bundler
 serve.py                    server statico usato da npm start: come http.server, con Cache-Control: no-store
 src/gatti.js                logica pura: stati, PARAMS, createGame(), update(), pspsps(), counterText()
@@ -99,6 +102,7 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - Ogni post ha nel front matter `title`, `title_en` e `date` con l'ora e il fuso, per esempio `date: 2026-09-14 15:18:16 +0200`. Il testo sta in blocchi `<div lang="it" markdown="1">` e `<div lang="en" markdown="1">`.
 - La `date` decide l'ordine dei post e compare nella home e in cima a ogni post nel formato `gg/mm/aaaa hh:mm`, con il fuso `Europe/Rome` impostato in `docs/_config.yml`. Senza l'ora, Jekyll ordina i post dello stesso giorno per nome del file. Come ora si usa quella del commit che ha creato il post.
 - Il pulsante lingua è in `docs/_includes/lingua.html` e ricorda la scelta in `localStorage`, alla chiave `lingua`.
+- I post raccontano ciascuno la propria giornata: non si riscrivono quando il gioco cambia, perché i cambiamenti successivi finiscono nei post nuovi.
 - Stop hook: se oggi ci sono commit e manca `docs/_posts/<oggi>-*.md`, blocca Claude e chiede un post in italiano e inglese, con data e ora nel front matter, poi commit e push su `master`.
 
 ### Flusso di lavoro
@@ -107,6 +111,7 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - Le sessioni in cloud lavorano su branch `claude/...` e non aprono PR. Quando si riprende in locale: `git fetch`, si guarda cosa c'è su quei branch, si provano i test e si uniscono con una PR.
 - Il controllo automatico dei permessi ha bloccato un merge su `master` fatto senza la conferma esplicita dell'utente: prima di unire, chiedi.
 - A fine sessione: devlog se c'è un checkpoint, handoff committato, tutto su `master`.
+- Documentazione: `README.md` per la panoramica, l'handoff più recente per i dettagli. Gli handoff precedenti sono storici e hanno un avviso in cima.
 
 ## Decisioni chiave
 
@@ -118,6 +123,7 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - **`serve.py` al posto di `python3 -m http.server`.** Durante il debug il browser integrato ha eseguito un `tasti.js` vecchio preso dalla cache anche dopo aver ricaricato la pagina.
 - **L'handoff si committa**, perché le sessioni in cloud non possono leggere file che non sono nella repo.
 - **Data e ora nei post del devlog**, richieste dall'utente. I due post del 14 settembre comparivano nell'ordine sbagliato perché Jekyll li ordinava per nome del file.
+- **Handoff vecchi non riscritti.** Quello del 13 settembre resta il resoconto della sua sessione, con in cima un avviso che elenca cosa è cambiato; lo stato attuale sta nell'handoff più recente e nel `README.md`.
 - Le decisioni del 13 settembre (niente bundler, logica separata dal rendering, livello deciso in Blender, devlog in `docs/`) restano valide.
 
 ## Gotcha
@@ -144,3 +150,4 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - **Correzione di Cmd.** Va confermata con la tastiera vera: tieni D, premi Cmd, lascia D, lascia Cmd, e la bambina deve fermarsi.
 - **Struttura del gioco.** Ancora da definire.
 - **Pulizia.** Esistono ancora i branch remoti delle PR unite, compreso `claude/eloquent-goldberg-medemm`, e il `.blend` contiene camera, luce e cubo della scena di default.
+- **Pagina del repo su GitHub.** Descrizione e sito del repo sono ancora vuoti: si possono impostare con `gh repo edit`, ma sono impostazioni del repo e vanno chieste all'utente.
