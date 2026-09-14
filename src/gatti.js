@@ -20,10 +20,11 @@ export const PARAMS = {
   fleeSpeedThreshold: GIRL_MAX_SPEED / 2,
   fleeSpeed: GIRL_MAX_SPEED * 1.5, // in fuga il gatto è sempre più veloce della bambina
   fleeDuration: 2.5,
+  fleeExcludedAngle: 30, // gradi: spicchio centrato sulla bambina in cui il gatto non scappa mai
   petDistance: 1,
 };
 
-// random è iniettabile: i test scelgono il tratto delle coccole invece di subirlo.
+// random è iniettabile: i test scelgono il tratto delle coccole e la direzione di fuga invece di subirli.
 export function createGame({ cats, girl = [0, 0], params = PARAMS, random = Math.random }) {
   return {
     params,
@@ -56,7 +57,7 @@ export function pspsps(game) {
   return called;
 }
 
-// input: { x, z } direzione da tastiera (-1, 0, 1), crouch se Ctrl è premuto. dt in secondi.
+// input: { x, z } direzione da tastiera (-1, 0, 1), crouch se è accovacciata (vedi tasti.js). dt in secondi.
 export function update(game, input, dt) {
   const { params: p, girl } = game;
   girl.crouched = input.crouch;
@@ -84,8 +85,7 @@ export function update(game, input, dt) {
     if (cat.state === FERMO && dist > 0 && dist <= p.reactionRadius) {
       const approachSpeed = (girl.vx * dx + girl.vz * dz) / dist; // quanto in fretta la bambina gli va incontro
       if (approachSpeed > p.fleeSpeedThreshold) {
-        // ponytail: scappa in linea retta, lontano da dove era la bambina quando si è spaventato
-        Object.assign(cat, { fleeTime: p.fleeDuration, fleeX: dx / dist, fleeZ: dz / dist });
+        Object.assign(cat, { fleeTime: p.fleeDuration, ...fleeDirection(dx, dz, game.random, p.fleeExcludedAngle) });
         entra(game, cat, IN_FUGA);
       }
     } else if (cat.state === IN_ARRIVO && dist > 0) {
@@ -98,6 +98,15 @@ export function update(game, input, dt) {
       entra(game, cat, ACCAREZZATO);
     }
   }
+}
+
+// Direzione di fuga a caso, uniforme su tutto il giro tranne lo spicchio di `excluded` gradi centrato sulla bambina:
+// il gatto può scappare di lato o passarle accanto, mai dritto verso di lei. (awayX, awayZ) punta dalla bambina al gatto.
+// ponytail: la direzione si sceglie una volta sola, quando si spaventa; poi corre dritto, e lungo i bordi se ci arriva
+function fleeDirection(awayX, awayZ, random, excluded) {
+  const maxOffset = Math.PI - (excluded * Math.PI) / 360; // 180° meno metà spicchio
+  const angle = Math.atan2(awayZ, awayX) + (random() * 2 - 1) * maxOffset;
+  return { fleeX: Math.cos(angle), fleeZ: Math.sin(angle) };
 }
 
 // Contro un bordo il gatto in fuga ci corre lungo invece di restare schiacciato lì, dove lo si raggiungerebbe.
