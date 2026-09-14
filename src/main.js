@@ -2,11 +2,9 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createGame, update, pspsps, counterText, PARAMS } from './gatti.js';
 import { taccuinoTesto } from './taccuino.js';
+import { GAME_KEYS, inputDaTasti, rilasciaTasto } from './tasti.js';
 
 const STATE_COLORS = { fermo: 0x9e9e9e, in_arrivo: 0xffc107, in_fuga: 0xf44336, accarezzato: 0x4caf50 };
-const GAME_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyE', 'ControlLeft', 'ControlRight'];
-// Shift vale come Ctrl: su Mac alcune combinazioni con Ctrl (per esempio Ctrl+frecce) non arrivano al gioco
-const CROUCH_KEYS = ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight'];
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(devicePixelRatio);
@@ -51,16 +49,15 @@ const catMaterials = Object.fromEntries(
 );
 
 const keys = new Set();
-const held = (...codes) => codes.some((code) => keys.has(code));
 addEventListener('keydown', (event) => {
   if (GAME_KEYS.includes(event.code)) event.preventDefault();
   keys.add(event.code);
   if (event.code === 'KeyE' && !event.repeat) {
-    game.girl.crouched = event.ctrlKey || event.shiftKey;
+    game.girl.crouched = inputDaTasti(keys).crouch;
     pspsps(game);
   }
 });
-addEventListener('keyup', (event) => keys.delete(event.code));
+addEventListener('keyup', (event) => rilasciaTasto(keys, event.code));
 addEventListener('blur', () => keys.clear());
 
 const hud = document.getElementById('contatore');
@@ -69,11 +66,7 @@ let last = performance.now();
 renderer.setAnimationLoop((now) => {
   const dt = Math.min((now - last) / 1000, 0.1);
   last = now;
-  update(game, {
-    x: held('KeyD', 'ArrowRight') - held('KeyA', 'ArrowLeft'),
-    z: held('KeyS', 'ArrowDown') - held('KeyW', 'ArrowUp'),
-    crouch: held(...CROUCH_KEYS),
-  }, dt);
+  update(game, inputDaTasti(keys), dt);
 
   girlMesh.position.set(game.girl.x, 0, game.girl.z);
   girlMesh.scale.y = game.girl.crouched ? 0.6 : 1;
