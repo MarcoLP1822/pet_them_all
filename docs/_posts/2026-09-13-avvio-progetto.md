@@ -2,6 +2,7 @@
 layout: post
 title: "Avvio del progetto"
 title_en: "Project kickoff"
+date: 2026-09-13 20:03:46 +0200
 ---
 
 <div lang="it" markdown="1">

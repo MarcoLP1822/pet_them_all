@@ -1,7 +1,8 @@
 title: Pet Them All
 description: Il devlog del gioco · The game's devlog
 lang: it
+timezone: Europe/Rome
 theme: minima
 excerpt_separator: "" # i post hanno due lingue: un estratto automatico taglierebbe a metà il blocco italiano
 minima:
-  date_format: "%d/%m/%Y"
+  date_format: "%d/%m/%Y %H:%M" # l'ora arriva dalla date nel front matter, che decide anche l'ordine dei post

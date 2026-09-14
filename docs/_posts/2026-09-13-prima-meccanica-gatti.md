@@ -2,6 +2,7 @@
 layout: post
 title: "La prima meccanica: chiamare e accarezzare i gatti"
 title_en: "The first mechanic: calling and petting cats"
+date: 2026-09-13 21:28:15 +0200
 ---
 
 <div lang="it" markdown="1">

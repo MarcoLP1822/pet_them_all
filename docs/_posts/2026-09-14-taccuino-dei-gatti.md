@@ -2,6 +2,7 @@
 layout: post
 title: "Il taccuino: ogni gatto si racconta un pezzo alla volta"
 title_en: "The notebook: each cat reveals itself one bit at a time"
+date: 2026-09-14 10:40:08 +0200
 ---
 
 <div lang="it" markdown="1">
