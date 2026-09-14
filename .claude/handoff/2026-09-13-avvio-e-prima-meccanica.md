@@ -1,5 +1,16 @@
 # Handoff · sessione del 13-14 settembre 2026
 
+> **Documento storico.** Descrive il progetto alla fine della sessione del 13-14 settembre e non viene più aggiornato. Da allora sono cambiati:
+>
+> - ci si accovaccia solo con Shift, e al rilascio di Cmd i tasti bloccati vengono liberati;
+> - i gatti scappano in una direzione a caso, fuori da uno spicchio di 30° centrato sulla bambina;
+> - ci sono il taccuino dei gatti (`src/taccuino.js`) e un modulo per la tastiera (`src/tasti.js`), e i test sono 18;
+> - `npm start` usa `serve.py` al posto di `python3 -m http.server`;
+> - la regola di handoff e gli handoff sono nella repo, non più esclusi da git;
+> - i post del devlog hanno data e ora.
+>
+> Per lo stato attuale leggi `2026-09-14-allineamento-controlli-e-fuga.md`.
+
 ## Sommario
 
 Prima sessione di Pet Them All. Si è partiti da una cartella vuota e si è arrivati a un prototipo giocabile della meccanica core: una bambina che chiama e accarezza gatti. Nel frattempo sono nati un devlog pubblico bilingue su GitHub Pages e una pipeline Blender → GLB → three.js, provata tramite Blender MCP.
