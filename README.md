@@ -48,9 +48,11 @@ npm test
 | `docs/` | Devlog Jekyll pubblicato con GitHub Pages |
 | `.claude/` | Regole, hook e handoff per lo sviluppo con Claude Code |
 | `CREDITS.md` | Fonte e licenza degli asset |
+| `BLUEPRINT.md` | Processo e architettura da riusare nei prossimi progetti |
 
 ## Per chi sviluppa
 
 - Le convenzioni del progetto sono in `.claude/rules/`.
 - Architettura, decisioni e problemi aperti sono descritti nell'handoff più recente, in `.claude/handoff/`.
 - Ogni modifica passa da un branch e da una pull request unita su `master`.
+- Il modo di lavorare, pensato per essere riusato in altri progetti, è in [BLUEPRINT.md](BLUEPRINT.md).
