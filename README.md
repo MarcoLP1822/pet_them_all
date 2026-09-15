@@ -34,6 +34,14 @@ Poi apri http://localhost:8000. Per i test:
 npm test
 ```
 
+Per il fuzz della logica, cioè centinaia di partite simulate che controllano le regole della meccanica a ogni frame:
+
+```bash
+npm run fuzz
+```
+
+Test e fuzz girano anche su GitHub, a ogni push su `master` e su ogni pull request.
+
 ## Struttura
 
 | Percorso | Contenuto |
@@ -43,6 +51,8 @@ npm test
 | `src/taccuino.js` | Taccuino dei gatti |
 | `src/tasti.js` | Lettura della tastiera |
 | `test/` | Test con `node --test` |
+| `tools/fuzz.mjs` | Fuzz della logica: partite simulate con le regole controllate a ogni frame |
+| `.github/workflows/test.yml` | CI: test e fuzz su ogni push a `master` e su ogni pull request |
 | `assets/livello-test.blend`, `assets/livello-test.glb` | Livello di prova fatto in Blender e il suo export |
 | `serve.py` | Server locale senza cache, usato da `npm start` |
 | `docs/` | Devlog Jekyll pubblicato con GitHub Pages |
@@ -54,5 +64,5 @@ npm test
 
 - Le convenzioni del progetto sono in `.claude/rules/`.
 - Architettura, decisioni e problemi aperti sono descritti nell'handoff più recente, in `.claude/handoff/`.
-- Ogni modifica passa da un branch e da una pull request unita su `master`.
+- Ogni modifica passa da un branch e da una pull request unita su `master`, con la CI verde.
 - Il modo di lavorare, pensato per essere riusato in altri progetti, è in [BLUEPRINT.md](BLUEPRINT.md).
