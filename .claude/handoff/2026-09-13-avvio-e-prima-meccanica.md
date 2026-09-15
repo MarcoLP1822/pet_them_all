@@ -9,7 +9,7 @@
 > - la regola di handoff e gli handoff sono nella repo, non più esclusi da git;
 > - i post del devlog hanno data e ora.
 >
-> Per lo stato attuale leggi `2026-09-14-allineamento-controlli-e-fuga.md`.
+> Superato da `2026-09-14-allineamento-controlli-e-fuga.md`. Per lo stato attuale del progetto leggi l'handoff più recente in questa cartella.
 
 ## Sommario
 

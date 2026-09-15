@@ -210,6 +210,7 @@ flowchart LR
 2. **Fuzz della logica.** Si simulano centinaia di partite con input casuali e strategie mirate, controllando a ogni frame le regole: transizioni, raggi, bordi, durate. Lo script sta in `tools/fuzz.mjs` e si lancia con `npm run fuzz`; per ogni nuova meccanica si aggiunge la sua regola.
 3. **Correggere alla radice.** Una guardia nel punto da cui passano tutti i chiamanti, non in ogni chiamante.
 4. **Lasciare il test** che avrebbe preso il bug.
+5. **Mettere alla prova i controlli.** Per sapere se test e fuzz servono davvero, si inserisce apposta un bug in una copia del codice e si verifica che falliscano, indicando la regola giusta.
 
 ### Trappole note
 
@@ -222,6 +223,10 @@ flowchart LR
 | Chrome headless nel sandbox di Bash | Si blocca | Eseguirlo fuori dal sandbox |
 | Blender chiuso senza salvare | La scena sparisce | Salvare subito; recupero da `quit.blend` |
 | Glob senza risultati in zsh | Il comando si interrompe | Controllare prima che i file esistano |
+| `PIPESTATUS` in zsh | Non esiste, e l'exit code di un comando in pipe si perde | Usare `$pipestatus`, oppure evitare la pipe |
+| Script Ruby su file UTF-8 con locale US-ASCII | Errore di codifica | Impostare `LANG=en_US.UTF-8` |
+| Script qualsiasi dentro `test/` | `node --test` lo esegue come se fosse un test | Tenere gli script di sviluppo in `tools/` |
+| Diagrammi Mermaid con errori | Su GitHub compare un riquadro d'errore al posto del disegno | Aprire il documento dal branch prima del merge |
 
 ## 6. Documentazione viva
 
@@ -272,3 +277,4 @@ flowchart LR
 |---|---|
 | 2026-09-15 | Prima versione, ricavata dalle sessioni del 13-15 settembre su Pet Them All |
 | 2026-09-15 | CI e fuzz adottati in Pet Them All. Nel modello di CI il push conta solo per il branch principale, c'è il passo `npm run fuzz --if-present` e il fuzz sta fuori da `test/` |
+| 2026-09-15 | Chiusura della sessione: nel debug si mettono alla prova test e fuzz con bug inseriti apposta; nuove trappole (`PIPESTATUS` in zsh, locale US-ASCII, script dentro `test/`, diagrammi Mermaid) |

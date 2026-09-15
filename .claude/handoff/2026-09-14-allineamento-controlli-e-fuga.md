@@ -1,5 +1,7 @@
 # Handoff · sessione del 14 settembre 2026
 
+> Superato da `2026-09-15-blueprint-ci-e-fuzz.md`. Per lo stato attuale del progetto leggi l'handoff più recente in questa cartella.
+
 ## Sommario
 
 Sessione locale arrivata dopo una sessione in cloud. Cosa è successo, in ordine:
@@ -150,4 +152,3 @@ Per avviare il gioco: `npm install` la prima volta, poi `npm start` e http://loc
 - **Correzione di Cmd.** Va confermata con la tastiera vera: tieni D, premi Cmd, lascia D, lascia Cmd, e la bambina deve fermarsi.
 - **Struttura del gioco.** Ancora da definire.
 - **Pulizia.** Esistono ancora i branch remoti delle PR unite, compreso `claude/eloquent-goldberg-medemm`, e il `.blend` contiene camera, luce e cubo della scena di default.
-- **Pagina del repo su GitHub.** Descrizione e sito del repo sono ancora vuoti: si possono impostare con `gh repo edit`, ma sono impostazioni del repo e vanno chieste all'utente.
