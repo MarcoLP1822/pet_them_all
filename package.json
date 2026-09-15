@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "python3 serve.py",
-    "test": "node --test"
+    "test": "node --test",
+    "fuzz": "node tools/fuzz.mjs"
   },
   "dependencies": {
     "three": "^0.186.0"

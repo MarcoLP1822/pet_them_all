@@ -49,11 +49,14 @@ Checklist del primo giorno, in quest'ordine:
    ```
 5. **Regole per Claude** in `.claude/rules/`, una per argomento: convenzioni di sviluppo e fase attuale, asset, handoff, blueprint. Modelli: `gameplay.md`, `blender-mcp.md`, `handoff.md` e `blueprint.md` di Pet Them All.
 6. **Server locale senza cache** in `tools/serve.py` (modello: `serve.py` di Pet Them All), avviato da `npm start` e da `.claude/launch.json`.
-7. **Test e CI.** `npm test` esegue `node --test`, e un workflow lo ripete su ogni push e PR:
+7. **Test e CI.** `npm test` esegue `node --test`, e un workflow lo ripete su ogni push al branch principale e su ogni PR, insieme al fuzz quando c'è (modello: `.github/workflows/test.yml` di Pet Them All):
    ```yaml
    # .github/workflows/test.yml
    name: test
-   on: [push, pull_request]
+   on:
+     push:
+       branches: [main]
+     pull_request:
    jobs:
      test:
        runs-on: ubuntu-latest
@@ -64,7 +67,9 @@ Checklist del primo giorno, in quest'ordine:
              node-version: 22
          - run: npm ci
          - run: npm test
+         - run: npm run fuzz --if-present
    ```
+   Limitare `push` al branch principale evita che ogni push su un branch con una PR aperta faccia partire la CI due volte. Lo script di fuzz va fuori da `test/`, per esempio in `tools/`: `node --test` esegue qualsiasi file dentro `test/`.
 8. **Devlog.** Jekyll in `docs/`, GitHub Pages da `main` `/docs`, con il primo post il giorno stesso (vedi [Devlog](#devlog)). Hook del devlog in `.claude/hooks/`, registrato come Stop hook in `.claude/settings.json`.
 9. **README** con cos'è il progetto, come si avvia, come si lanciano i test e com'è organizzata la repo.
 
@@ -250,9 +255,9 @@ flowchart LR
 | Branch principale `main` deciso subito | Cambiarlo dopo costa | Si chiama `master` |
 | README, descrizione e sito del repo dal primo giorno | La repo si presenta da sola | Aggiunti a progetto avviato |
 | Server senza cache dal primo giorno | Evita di provare codice vecchio | Aggiunto dopo un bug |
-| CI con i test su ogni PR | I merge non sono più alla cieca | Assente |
+| CI con test e fuzz su ogni PR | I merge non sono più alla cieca | Adottata il 15 settembre |
 | Cancellazione automatica dei branch uniti | Niente branch vecchi da pulire | Branch vecchi ancora su GitHub |
-| Script di sviluppo in `tools/` (server, fuzz, screenshot, generazione del livello) | Si possono rilanciare in ogni momento | Server alla radice; fuzz, screenshot e generazione del livello fuori dalla repo |
+| Script di sviluppo in `tools/` (server, fuzz, screenshot, generazione del livello) | Si possono rilanciare in ogni momento | Fuzz in `tools/fuzz.mjs` dal 15 settembre; server ancora alla radice; screenshot e generazione del livello fuori dalla repo |
 | `.blend` salvato subito nella repo | Una scena non salvata si perde | Recuperato da `quit.blend` |
 | Asset collegati per nome | L'ordine dei nodi nel file può cambiare | I numeri dei gatti seguono l'ordine nel GLB |
 | Comandi senza Ctrl e Cmd, tasti liberati su blur e al rilascio di Cmd | Evita i problemi di macOS e Windows | Corretto dopo due bug |
@@ -266,3 +271,4 @@ flowchart LR
 | Data | Modifica |
 |---|---|
 | 2026-09-15 | Prima versione, ricavata dalle sessioni del 13-15 settembre su Pet Them All |
+| 2026-09-15 | CI e fuzz adottati in Pet Them All. Nel modello di CI il push conta solo per il branch principale, c'è il passo `npm run fuzz --if-present` e il fuzz sta fuori da `test/` |
